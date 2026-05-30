@@ -286,13 +286,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const PHOTO_POS_KEY = 'blog_photo_position';
 
   if (photoDisplay) {
-    // Restore saved crop position
     const savedPos = localStorage.getItem(PHOTO_POS_KEY);
     if (savedPos) {
       photoDisplay.style.objectPosition = savedPos;
     }
 
-    // === Drag to reposition (crop) ===
     let dragging = false, startX, startY, startPosX, startPosY;
 
     function getPosPercent() {
@@ -301,30 +299,36 @@ document.addEventListener('DOMContentLoaded', () => {
       return { x: parseFloat(parts[0]), y: parseFloat(parts[1]) };
     }
 
-    photoDisplay.addEventListener('mousedown', (e) => {
+    photoDisplay.addEventListener('pointerdown', (e) => {
       dragging = true;
+      photoDisplay.setPointerCapture(e.pointerId);
       startX = e.clientX;
       startY = e.clientY;
       const pos = getPosPercent();
       startPosX = pos.x;
       startPosY = pos.y;
       e.preventDefault();
+      e.stopPropagation();
     });
 
-    window.addEventListener('mousemove', (e) => {
+    photoDisplay.addEventListener('pointermove', (e) => {
       if (!dragging) return;
-      const dx = (e.clientX - startX) / photoDisplay.clientWidth * 100;
-      const dy = (e.clientY - startY) / photoDisplay.clientHeight * 100;
+      const dx = (e.clientX - startX) / photoDisplay.offsetWidth * 100;
+      const dy = (e.clientY - startY) / photoDisplay.offsetHeight * 100;
       const newX = Math.max(0, Math.min(100, startPosX + dx));
       const newY = Math.max(0, Math.min(100, startPosY + dy));
       photoDisplay.style.objectPosition = `${newX}% ${newY}%`;
     });
 
-    window.addEventListener('mouseup', () => {
+    photoDisplay.addEventListener('pointerup', () => {
       if (dragging) {
         dragging = false;
         localStorage.setItem(PHOTO_POS_KEY, photoDisplay.style.objectPosition);
       }
+    });
+
+    photoDisplay.addEventListener('pointercancel', () => {
+      dragging = false;
     });
   }
 
