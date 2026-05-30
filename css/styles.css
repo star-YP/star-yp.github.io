@@ -1275,9 +1275,7 @@ button {
 .post-card__image-overlay {
   position: absolute;
   inset: 0;
-  background: var(--glass-bg-light);
-  backdrop-filter: blur(4px) saturate(120%);
-  -webkit-backdrop-filter: blur(4px) saturate(120%);
+  background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.35));
 }
 
 .post-card__category {
@@ -1753,6 +1751,13 @@ main, .nav, .footer, .music-player, .scroll-top, .bg-orbs {
 .post-overlay__close:hover {
   color: var(--color-accent);
   background: var(--glass-bg);
+}
+.post-overlay__body .post-page__cover {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-2xl);
 }
 .post-overlay__body .post-page__header { margin-bottom: var(--space-2xl); }
 .post-overlay__body .post-page__category {

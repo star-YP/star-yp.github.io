@@ -27,6 +27,13 @@
       transition: color 0.2s ease;
     }
     .post-page__back:hover { color: var(--color-accent); }
+    .post-page__cover {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-2xl);
+    }
     .post-page__header { margin-bottom: var(--space-2xl); }
     .post-page__category {
       display: inline-block;
@@ -206,6 +213,7 @@
         document.title = post.title + ' - star-yp\'s Blog';
         page.innerHTML += `
           <article>
+            ${post.cover ? `<img class="post-page__cover" src="${post.cover}" alt="">` : ''}
             <header class="post-page__header">
               <div class="post-page__category">${post.category}</div>
               <h1 class="post-page__title">${post.title}</h1>

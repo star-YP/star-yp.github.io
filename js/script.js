@@ -1041,6 +1041,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!postOverlay || !postOverlayContent) return;
     document.title = post.title + ' - star-yp\'s Blog';
     postOverlayContent.innerHTML = `
+      ${post.cover ? `<img class="post-page__cover" src="${post.cover}" alt="">` : ''}
       <header class="post-page__header">
         <div class="post-page__category">${post.category}</div>
         <h1 class="post-page__title">${post.title}</h1>
