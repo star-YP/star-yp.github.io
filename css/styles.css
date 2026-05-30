@@ -1357,20 +1357,12 @@ button {
 .contact__link {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
-  padding: 14px 24px;
-  border-radius: var(--radius-full);
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
   color: var(--color-text-secondary);
-  text-decoration: none;
   transition: all var(--transition-base);
-}
-.contact__link-label {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-accent);
-}
-.contact__link-val {
-  font-size: var(--text-sm);
 }
 
 .contact__link:hover {
