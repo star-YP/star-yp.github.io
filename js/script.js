@@ -280,41 +280,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ==========================================================
-     [10] PHOTO UPLOAD (with localStorage persistence)
+     [10] PHOTO DISPLAY (fixed image + drag to reposition)
      ========================================================== */
-  const photoPlaceholder = document.getElementById('photoPlaceholder');
-  const photoInput = document.getElementById('photoInput');
   const photoDisplay = document.getElementById('photoDisplay');
-  const PHOTO_KEY = 'blog_user_photo';
   const PHOTO_POS_KEY = 'blog_photo_position';
 
-  if (photoPlaceholder && photoInput && photoDisplay) {
-    const UPLOAD_PASSWORD = 'wxhmmmysys';
-
-    function checkPassword() {
-      const input = prompt('请输入密码以上传照片：');
-      return input === UPLOAD_PASSWORD;
-    }
-
-    // Restore photo + crop position (localStorage first, then assets fallback)
-    const savedPhoto = localStorage.getItem(PHOTO_KEY);
-    if (savedPhoto) {
-      photoDisplay.src = savedPhoto;
-      photoDisplay.style.display = 'block';
-      photoPlaceholder.style.display = 'none';
-      const savedPos = localStorage.getItem(PHOTO_POS_KEY);
-      if (savedPos) {
-        photoDisplay.style.objectPosition = savedPos;
-      }
-    } else {
-      // Try loading from assets folder (for deployed site)
-      const defaultPhoto = new Image();
-      defaultPhoto.onload = function() {
-        photoDisplay.src = 'assets/photo.jpg';
-        photoDisplay.style.display = 'block';
-        photoPlaceholder.style.display = 'none';
-      };
-      defaultPhoto.src = 'assets/photo.jpg';
+  if (photoDisplay) {
+    // Restore saved crop position
+    const savedPos = localStorage.getItem(PHOTO_POS_KEY);
+    if (savedPos) {
+      photoDisplay.style.objectPosition = savedPos;
     }
 
     // === Drag to reposition (crop) ===
@@ -323,19 +298,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function getPosPercent() {
       const pos = photoDisplay.style.objectPosition || '50% 50%';
       const parts = pos.split(' ');
-      return {
-        x: parseFloat(parts[0]),
-        y: parseFloat(parts[1])
-      };
+      return { x: parseFloat(parts[0]), y: parseFloat(parts[1]) };
     }
 
-    // Double-click to replace photo
-    photoDisplay.addEventListener('dblclick', () => {
-      if (checkPassword()) photoInput.click();
-    });
-
     photoDisplay.addEventListener('mousedown', (e) => {
-      if (!photoDisplay.src) return;
       dragging = true;
       startX = e.clientX;
       startY = e.clientY;
@@ -359,32 +325,6 @@ document.addEventListener('DOMContentLoaded', () => {
         dragging = false;
         localStorage.setItem(PHOTO_POS_KEY, photoDisplay.style.objectPosition);
       }
-    });
-
-    // === Upload (password-gated) ===
-    photoPlaceholder.addEventListener('click', () => {
-      if (checkPassword()) photoInput.click();
-    });
-
-    photoInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const dataUrl = ev.target.result;
-        try {
-          localStorage.setItem(PHOTO_KEY, dataUrl);
-          localStorage.setItem(PHOTO_POS_KEY, '50% 50%');
-        } catch (err) {
-          console.warn('Photo too large for localStorage');
-        }
-        photoDisplay.src = dataUrl;
-        photoDisplay.style.objectPosition = '50% 50%';
-        photoDisplay.style.display = 'block';
-        photoPlaceholder.style.display = 'none';
-      };
-      reader.readAsDataURL(file);
     });
   }
 
