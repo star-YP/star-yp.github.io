@@ -1336,6 +1336,20 @@ button {
   color: var(--color-accent-hover);
 }
 
+.post-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: var(--space-md);
+}
+
+.post-card__tag {
+  display: inline-block;
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+  font-weight: 400;
+}
+
 /* ============================================================
    [10] CONTACT / FOOTER
    ============================================================ */
@@ -1767,6 +1781,16 @@ main, .nav, .footer, .music-player, .scroll-top, .bg-orbs {
   font-weight: 600;
   margin-bottom: var(--space-sm);
 }
+.post-overlay__body .post-page__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: var(--space-lg);
+}
+.post-overlay__body .post-page__tag {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
 .post-overlay__body .post-page__title {
   font-size: var(--text-4xl);
   font-weight: 800;
@@ -1787,6 +1811,17 @@ main, .nav, .footer, .music-player, .scroll-top, .bg-orbs {
   color: var(--color-text-secondary);
 }
 .post-overlay__body .post-page__body p { margin-bottom: var(--space-lg); }
+
+.post-page__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: var(--space-lg);
+}
+.post-page__tag {
+  font-size: var(--text-xs);
+  color: var(--color-text-tertiary);
+}
 
 @media (max-width: 640px) {
   .post-overlay__panel {

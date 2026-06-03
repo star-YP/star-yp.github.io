@@ -242,8 +242,8 @@
           <article>
             ${post.cover ? `<img class="post-page__cover" src="${post.cover}" alt="">` : ''}
             <header class="post-page__header">
-              <div class="post-page__category">${post.category}</div>
               <h1 class="post-page__title">${post.title}</h1>
+              ${post.tags ? `<div class="post-page__tags">${post.tags.map(t => `<span class="post-page__tag">#${t}</span>`).join('')}</div>` : ''}
               <time class="post-page__date" datetime="${post.date}">${post.date}</time>
             </header>
             <div class="post-page__body">
