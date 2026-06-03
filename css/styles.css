@@ -180,10 +180,10 @@ body, nav, section, .glass--heavy, .glass--medium, .glass--light,
   background: rgba(255, 255, 255, 0.08);
 }
 [data-theme="dark"] ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.12);
 }
 [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.22);
 }
 [data-theme="dark"] body::before {
   background: var(--color-bg);
@@ -1765,8 +1765,8 @@ main, .nav, .footer, .music-player, .scroll-top, .bg-orbs {
   z-index: 2;
   display: flex;
   justify-content: flex-end;
-  padding-top: 16px;
-  margin-bottom: -36px;
+  padding: 16px 16px 0 0;
+  margin-bottom: -40px;
   pointer-events: none;
 }
 .post-overlay__close {
@@ -2265,7 +2265,7 @@ html {
 }
 
 ::-webkit-scrollbar {
-  width: 3px;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -2273,12 +2273,12 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.08);
-  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.14);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.18);
+  background: rgba(0, 0, 0, 0.26);
 }
 
 /* ============================================================
