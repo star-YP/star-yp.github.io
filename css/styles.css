@@ -1717,12 +1717,13 @@ button {
 body.post-overlay-active main,
 body.post-overlay-active .nav,
 body.post-overlay-active .footer,
+body.post-overlay-active .music-player,
 body.post-overlay-active .scroll-top,
 body.post-overlay-active .bg-orbs {
   filter: blur(6px);
   transition: filter 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-main, .nav, .footer, .scroll-top, .bg-orbs {
+main, .nav, .footer, .music-player, .scroll-top, .bg-orbs {
   transition: filter 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .post-overlay__panel {
@@ -1758,11 +1759,18 @@ main, .nav, .footer, .scroll-top, .bg-orbs {
 .post-overlay--open .post-overlay__panel {
   transform: scale(1) translateY(0);
 }
-.post-overlay__close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
+.post-overlay__close-wrap {
+  position: sticky;
+  top: 0;
   z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 16px;
+  margin-bottom: -36px;
+  pointer-events: none;
+}
+.post-overlay__close {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1775,6 +1783,7 @@ main, .nav, .footer, .scroll-top, .bg-orbs {
   border: 1px solid var(--glass-border);
   border-radius: 50%;
   cursor: pointer;
+  pointer-events: auto;
   transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 .post-overlay__close:hover {
