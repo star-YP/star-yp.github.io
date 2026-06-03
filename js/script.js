@@ -444,6 +444,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }).catch(() => {});
       }
       localStorage.removeItem(MUSIC_STATE_KEY);
+    } else if (bgmAudio.src && !bgmAudio.paused) {
+      // Already restored by early inline script — just sync UI
+      musicPlayer.classList.add('music-player--playing');
     } else {
       loadTrack(currentTrack);
     }
@@ -454,6 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         localStorage.setItem(MUSIC_STATE_KEY, JSON.stringify({
           trackIdx: currentTrack,
+          src: bgmAudio.src,
           currentTime: bgmAudio.currentTime || 0,
           playing: !bgmAudio.paused
         }));
@@ -1075,18 +1079,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Intercept clicks on post card links (mobile only: open overlay; desktop navigates to post.html)
-  document.querySelectorAll('.post-card__body[href]').forEach(link => {
-    link.addEventListener('click', function(e) {
-      if (window.innerWidth > 640) return; // desktop: let the browser navigate to post.html
-      const href = this.getAttribute('href');
-      if (!href || !href.startsWith('post.html')) return;
-      e.preventDefault();
-      const params = new URLSearchParams(href.split('?')[1] || '');
-      const id = params.get('id');
-      const post = (typeof BLOG_POSTS !== 'undefined' ? BLOG_POSTS : []).find(p => p.id === id);
-      if (post) openPost(post);
-    });
+  // Post card clicks — open overlay (both desktop & mobile, music uninterrupted)
+  document.addEventListener('click', function(e) {
+    const link = e.target.closest('.post-card__body[href]');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (!href || !href.startsWith('post.html')) return;
+    e.preventDefault();
+    const params = new URLSearchParams(href.split('?')[1] || '');
+    const id = params.get('id');
+    const post = (typeof BLOG_POSTS !== 'undefined' ? BLOG_POSTS : []).find(p => p.id === id);
+    if (post) openPost(post);
   });
 
   // Close button + backdrop
@@ -1104,7 +1107,6 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('popstate', function(e) {
     if (postOverlay && postOverlay.classList.contains('post-overlay--open')) {
       if (e.state && e.state.postId) {
-        // Navigate to different post or stay
         const post = (typeof BLOG_POSTS !== 'undefined' ? BLOG_POSTS : []).find(p => p.id === e.state.postId);
         if (post) openPost(post);
         else closePost();
@@ -1119,17 +1121,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('post');
     if (id) {
-      // Desktop: redirect to standalone post page
-      if (window.innerWidth > 640) {
-        window.location.replace('post.html?id=' + id);
-        return;
-      }
-      // Mobile: open the overlay
       const post = (typeof BLOG_POSTS !== 'undefined' ? BLOG_POSTS : []).find(p => p.id === id);
       if (post) {
-        // Replace state to avoid double back
         history.replaceState({ postId: post.id }, '', '?post=' + post.id);
-        // Small delay for DOM ready
         if (document.readyState === 'loading') {
           window.addEventListener('DOMContentLoaded', () => openPost(post));
         } else {

@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/jpeg" href="favicon.jpg">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="prefetch" href="https://music.163.com/song/media/outer/url?id=533259686.mp3" as="audio" crossorigin="anonymous">
   <style>
     .post-page {
       max-width: 760px;
@@ -121,6 +122,20 @@
   <audio id="bgmAudio" preload="auto">
     <source src="https://music.163.com/song/media/outer/url?id=533259686.mp3" type="audio/mpeg">
   </audio>
+  <script>
+    (() => {
+      const key = 'blog_music_state';
+      let s;
+      try { s = JSON.parse(localStorage.getItem(key)); } catch (e) {}
+      if (!s || !s.playing || !s.src) return;
+      localStorage.removeItem(key);
+      const a = document.getElementById('bgmAudio');
+      if (!a) return;
+      a.src = s.src;
+      a.currentTime = s.currentTime || 0;
+      a.play().catch(() => {});
+    })();
+  </script>
   <div class="music-player glass--heavy tilt-card" id="musicPlayer">
     <div class="music-player__header">
       <div class="music-player__album">
@@ -208,38 +223,14 @@
       const theme = localStorage.getItem('blog_theme') || 'light';
       document.documentElement.setAttribute('data-theme', theme);
     })();
-    // Loading progress bar
-    (() => {
-      const bar = document.getElementById('progressBar');
-      if (!bar) return;
-      let width = 0;
-      const step = () => {
-        if (width < 70) {
-          width += (70 - width) * 0.15 + 2;
-          bar.style.width = Math.min(width, 70) + '%';
-          requestAnimationFrame(() => setTimeout(step, 100));
-        } else if (width < 88) {
-          width += (88 - width) * 0.04;
-          bar.style.width = Math.min(width, 88) + '%';
-          requestAnimationFrame(() => setTimeout(step, 200));
-        }
-      };
-      step();
-      window.addEventListener('load', () => {
-        bar.classList.add('progress-bar--done');
-      });
-    })();
-    // Post rendering
-    document.addEventListener('DOMContentLoaded', () => {
-      const params = new URLSearchParams(window.location.search);
-      const id = params.get('id');
-      const post = (typeof BLOG_POSTS !== 'undefined' ? BLOG_POSTS : []).find(p => p.id === id);
+    // Shared: render a post into the page
+    function renderPost(post, addToHistory) {
       const page = document.getElementById('postPage');
-
+      const backLink = '<a href="index.html" class="post-page__back">← 返回文章列表</a>';
       if (post) {
         document.title = post.title + ' - star-yp\'s Blog';
-        page.innerHTML += `
-          <article>
+        page.innerHTML = backLink + `
+          <article style="animation:postFadeIn 0.35s ease-out both">
             ${post.cover ? `<img class="post-page__cover" src="${post.cover}" alt="">` : ''}
             <header class="post-page__header">
               <h1 class="post-page__title">${post.title}</h1>
@@ -252,8 +243,74 @@
           </article>
         `;
       } else {
-        page.innerHTML += '<p class="post-page__notfound">文章未找到 😕</p>';
+        page.innerHTML = backLink + '<p class="post-page__notfound">文章未找到 😕</p>';
       }
+      if (addToHistory) {
+        history.pushState({ postId: post ? post.id : null }, '', 'post.html?id=' + (post ? post.id : ''));
+      }
+      window.scrollTo(0, 0);
+    }
+
+    // Progress bar animation
+    function animateProgressBar() {
+      const bar = document.getElementById('progressBar');
+      if (!bar) return;
+      bar.classList.remove('progress-bar--done');
+      bar.style.width = '0%';
+      let width = 0;
+      const step = () => {
+        if (width < 60) {
+          width += (60 - width) * 0.2 + 3;
+          bar.style.width = Math.min(width, 60) + '%';
+          requestAnimationFrame(() => setTimeout(step, 60));
+        } else if (width < 85) {
+          width += (85 - width) * 0.06;
+          bar.style.width = Math.min(width, 85) + '%';
+          requestAnimationFrame(() => setTimeout(step, 120));
+        }
+      };
+      step();
+      return () => { bar.classList.add('progress-bar--done'); };
+    }
+
+    // Initial load
+    (() => {
+      const done = animateProgressBar();
+      window.addEventListener('load', done);
+      document.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const post = (typeof BLOG_POSTS !== 'undefined' ? BLOG_POSTS : []).find(p => p.id === id);
+        history.replaceState({ postId: id || null }, '', 'post.html?id=' + (id || ''));
+        renderPost(post, false);
+      });
+    })();
+
+    // Inter-post navigation: intercept clicks to post.html?id=xxx, swap content without reload
+    document.addEventListener('click', function(e) {
+      const link = e.target.closest('a[href]');
+      if (!link) return;
+      const href = link.getAttribute('href');
+      if (!href || !href.startsWith('post.html?id=')) return;
+      e.preventDefault();
+      const params = new URLSearchParams(href.split('?')[1]);
+      const id = params.get('id');
+      const post = (typeof BLOG_POSTS !== 'undefined' ? BLOG_POSTS : []).find(p => p.id === id);
+      if (!post) return;
+      const done = animateProgressBar();
+      // small delay so progress bar is visible
+      setTimeout(() => {
+        renderPost(post, true);
+        done();
+      }, 180);
+    });
+
+    // Browser back/forward between posts
+    window.addEventListener('popstate', function(e) {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      const post = (typeof BLOG_POSTS !== 'undefined' ? BLOG_POSTS : []).find(p => p.id === id);
+      renderPost(post, false);
     });
   </script>
 </body>
