@@ -1759,23 +1759,16 @@ main, .nav, .footer, .music-player, .scroll-top, .bg-orbs {
 .post-overlay--open .post-overlay__panel {
   transform: scale(1) translateY(0);
 }
-.post-overlay__close-wrap {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  display: flex;
-  justify-content: flex-end;
-  padding: 16px 16px 0 0;
-  margin-bottom: -40px;
-  pointer-events: none;
-}
 .post-overlay__close {
-  position: relative;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 502;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   color: var(--color-text-secondary);
   background: var(--glass-bg);
   backdrop-filter: blur(16px);
@@ -1783,8 +1776,13 @@ main, .nav, .footer, .music-player, .scroll-top, .bg-orbs {
   border: 1px solid var(--glass-border);
   border-radius: 50%;
   cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease, opacity 0.35s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.post-overlay--open .post-overlay__close {
+  opacity: 1;
   pointer-events: auto;
-  transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 .post-overlay__close:hover {
   color: var(--color-text-primary);
