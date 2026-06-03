@@ -350,6 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const musicNextBtn = document.getElementById('musicNext');
   const musicLyricsBtn = document.getElementById('musicLyrics');
   const musicLyricsPanel = document.getElementById('musicLyricsPanel');
+  const musicCollapseBtn = document.getElementById('musicCollapse');
   const musicLyricsInner = document.getElementById('musicLyricsInner');
   const musicSeek = document.getElementById('musicSeek');
   const musicCurTime = document.getElementById('musicCurTime');
@@ -504,6 +505,13 @@ document.addEventListener('DOMContentLoaded', () => {
       musicLyricsBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         musicLyricsPanel.classList.toggle('music-player__lyrics--open');
+      });
+    }
+    // Music collapse toggle
+    if (musicCollapseBtn) {
+      musicCollapseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        musicPlayer.classList.toggle('music-player--collapsed');
       });
     }
 
