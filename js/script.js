@@ -1075,9 +1075,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Intercept clicks on post card links
+  // Intercept clicks on post card links (mobile only: open overlay; desktop navigates to post.html)
   document.querySelectorAll('.post-card__body[href]').forEach(link => {
     link.addEventListener('click', function(e) {
+      if (window.innerWidth > 640) return; // desktop: let the browser navigate to post.html
       const href = this.getAttribute('href');
       if (!href || !href.startsWith('post.html')) return;
       e.preventDefault();
@@ -1118,6 +1119,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('post');
     if (id) {
+      // Desktop: redirect to standalone post page
+      if (window.innerWidth > 640) {
+        window.location.replace('post.html?id=' + id);
+        return;
+      }
+      // Mobile: open the overlay
       const post = (typeof BLOG_POSTS !== 'undefined' ? BLOG_POSTS : []).find(p => p.id === id);
       if (post) {
         // Replace state to avoid double back

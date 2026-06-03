@@ -12,9 +12,14 @@
   <link rel="stylesheet" href="css/styles.css">
   <style>
     .post-page {
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
       padding: var(--space-4xl) var(--space-lg);
+      animation: postFadeIn 0.5s ease-out both;
+    }
+    @keyframes postFadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
     .post-page__back {
       display: inline-flex;
@@ -70,6 +75,7 @@
   </style>
 </head>
 <body>
+  <div class="progress-bar" id="progressBar"></div>
   <canvas class="particle-bg" id="particleBg" aria-hidden="true"></canvas>
   <div class="bg-orbs" aria-hidden="true">
     <div class="bg-orbs__orb bg-orbs__orb--1"></div>
@@ -201,6 +207,27 @@
     (() => {
       const theme = localStorage.getItem('blog_theme') || 'light';
       document.documentElement.setAttribute('data-theme', theme);
+    })();
+    // Loading progress bar
+    (() => {
+      const bar = document.getElementById('progressBar');
+      if (!bar) return;
+      let width = 0;
+      const step = () => {
+        if (width < 70) {
+          width += (70 - width) * 0.15 + 2;
+          bar.style.width = Math.min(width, 70) + '%';
+          requestAnimationFrame(() => setTimeout(step, 100));
+        } else if (width < 88) {
+          width += (88 - width) * 0.04;
+          bar.style.width = Math.min(width, 88) + '%';
+          requestAnimationFrame(() => setTimeout(step, 200));
+        }
+      };
+      step();
+      window.addEventListener('load', () => {
+        bar.classList.add('progress-bar--done');
+      });
     })();
     // Post rendering
     document.addEventListener('DOMContentLoaded', () => {
