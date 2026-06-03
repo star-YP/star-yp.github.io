@@ -1734,7 +1734,7 @@ main, .nav, .footer, .music-player, .scroll-top, .bg-orbs {
   max-height: 90dvh;
   margin: auto;
   overflow-y: auto;
-  padding: var(--space-4xl) var(--space-2xl);
+  padding: var(--space-2xl) var(--space-2xl);
   border: 1px solid var(--glass-border-heavy);
   border-radius: var(--radius-lg);
   box-shadow: var(--glass-shadow-lg);
@@ -1776,13 +1776,7 @@ main, .nav, .footer, .music-player, .scroll-top, .bg-orbs {
   border: 1px solid var(--glass-border);
   border-radius: 50%;
   cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease, opacity 0.35s ease;
-  opacity: 0;
-  pointer-events: none;
-}
-.post-overlay--open .post-overlay__close {
-  opacity: 1;
-  pointer-events: auto;
+  transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 .post-overlay__close:hover {
   color: var(--color-text-primary);
@@ -1791,7 +1785,7 @@ main, .nav, .footer, .music-player, .scroll-top, .bg-orbs {
 }
 .post-overlay__body .post-page__cover {
   width: 100%;
-  max-height: 320px;
+  max-height: 400px;
   object-fit: cover;
   border-radius: var(--radius-md);
   margin-bottom: var(--space-2xl);
